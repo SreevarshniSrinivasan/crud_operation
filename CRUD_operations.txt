@@ -1,0 +1,142 @@
+import java.sql.*;
+import java.util.Scanner;
+
+public class Queries {
+    public static void selectQuery(String name) throws ClassNotFoundException, SQLException {
+        String url = "jdbc:mysql://localhost:3307/bank1";
+        String username = "root";
+        String password = "root";
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        // System.out.println("Driver classLoading");
+        Connection con = DriverManager.getConnection(url, username, password);
+
+        PreparedStatement ps = con.prepareStatement("select balance from customer where c_name=?;");
+        ps.setString(1, name);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            System.out.println(rs.getInt("balance"));
+        }
+
+
+//        Statement s=con.createStatement();
+//        ResultSet rs=s.executeQuery("select * from customer ");
+
+//        while(rs.next())
+//        {
+//            System.out.println(rs.getInt("accno")+" "+rs.getInt("pin")+" "+
+//                    rs.getString("c_name")+" "+rs.getInt("balance")+" "+
+//                    rs.getString("acc_type")+" "+rs.getString("pan")+" "+
+//                    rs.getString("contactno")+" "+rs.getString("customer_addr")+" "+
+//                    rs.getString("b_id"));
+//        }
+    }
+
+    public static void insertQuery(int accno, int pin, String c_name, int balance, String acc_type, String pan,
+                                   String contactno, String customer_addr, String b_id) throws ClassNotFoundException, SQLException {
+        String url = "jdbc:mysql://localhost:3307/bank1";
+        String username = "root";
+        String password = "root";
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        // System.out.println("Driver classLoading");
+        Connection con = DriverManager.getConnection(url, username, password);
+        PreparedStatement ps = con.prepareStatement("insert into customer values(?,?,?,?,?,?,?,?,?)");
+        ps.setInt(1, accno);
+        ps.setInt(2, pin);
+        ps.setString(3, c_name);
+        ps.setInt(4, balance);
+        ps.setString(5, acc_type);
+        ps.setString(6, pan);
+        ps.setString(7, contactno);
+        ps.setString(8, customer_addr);
+        ps.setString(9, b_id);
+
+        int row = ps.executeUpdate();
+        if (row > 0) {
+            System.out.println("values are inserted");
+        } else {
+            System.out.println("values are not inserted");
+        }
+    }
+
+    public static void updateCustomer(String id, int pin, String phone) throws ClassNotFoundException, SQLException {
+        String url = "jdbc:mysql://localhost:3307/bank1";
+        String username = "root";
+        String password = "root";
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        // System.out.println("Driver classLoading");
+        Connection con = DriverManager.getConnection(url, username, password);
+        PreparedStatement ps = con.prepareStatement("update customer set cus_pin=?,cus_contactNo=? where branch_id=?;");
+        ps.setInt(1, pin);
+        ps.setString(2, phone);
+        ps.setString(3, id);
+        int row = ps.executeUpdate();
+        if (row > 0) {
+            System.out.println("values are updated successfully");
+        } else {
+            System.out.println("values are not updates successfully");
+        }
+    }
+
+
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+        //select
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("enter the name");
+        String name = sc.next();
+        System.out.println("balance amount");
+
+        selectQuery(name);
+
+
+        //insert
+
+        //Scanner sc=new Scanner(System.in);
+
+        System.out.println("enter the c_accno");
+        int c_accno = sc.nextInt();
+
+        System.out.println("enter the c_pin");
+        int c_pin = sc.nextInt();
+
+        System.out.println("enter the c_name");
+        String c_name = sc.next();
+
+        System.out.println("enter the balance");
+        int balance = sc.nextInt();
+
+        System.out.println("enter the acc_type");
+        String acc_type = sc.next();
+
+        System.out.println("enter the pan");
+        String pan = sc.next();
+
+        System.out.println("enter the contactno");
+        String contactno = sc.next();
+
+        System.out.println("enter the customer_addr");
+        String customer_addr = sc.next();
+
+        System.out.println("enter the b_id");
+        String b_id = sc.next();
+
+        insertQuery(c_accno, c_pin, c_name, balance, acc_type, pan, contactno, customer_addr, b_id);
+
+        //update
+
+        //Scanner sc=new Scanner(System.in);
+
+        System.out.println("enter the id");
+        String id = sc.next();
+
+        System.out.println("enter the pin number");
+        int pin = sc.nextInt();
+
+        System.out.println("enter the phone number");
+        String phone = sc.next();
+
+        updateCustomer(id, pin, phone);
+
+    }
+
+}
